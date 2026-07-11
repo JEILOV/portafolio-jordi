@@ -9,7 +9,14 @@ function GithubIcon({ size = 14 }: { size?: number }) {
   );
 }
 
-export default function ProductChapter({ product }: { product: Product }) {
+export default function ProductChapter({
+  product,
+  index,
+}: {
+  product: Product;
+  /** Posición dentro de la lista de casos de estudio, calculada por quien renderiza — nunca un campo guardado en el dato. */
+  index?: number;
+}) {
   return (
     <article className="relative border-b border-hairline last:border-b-0">
       <div className="relative aspect-[16/10] w-full overflow-hidden md:aspect-[21/9]">
@@ -22,7 +29,9 @@ export default function ProductChapter({ product }: { product: Product }) {
           <span className="absolute bottom-0 right-0 h-5 w-5 border-b border-r border-chassis" />
         </div>
         <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10">
-          <p className="font-display text-xs uppercase tracking-widest text-phosphor">n.º {product.index} / work</p>
+          <p className="font-display text-xs uppercase tracking-widest text-phosphor">
+            {index !== undefined ? `n.º ${String(index).padStart(2, "0")} / work` : "work"}
+          </p>
           <h3 className="mt-2 font-display text-3xl text-ink md:text-5xl">{product.name}</h3>
           <p className="mt-1 text-sm text-ink-muted md:text-base">{product.tagline}</p>
         </div>

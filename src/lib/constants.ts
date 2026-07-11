@@ -4,10 +4,9 @@ import type { Product } from "@/types";
 export const PRODUCTS: Product[] = [
   {
     id: "tucampus",
-    index: "01",
+    displayMode: "case-study",
     name: "TuCampus",
     tagline: "Marketplace para la comunidad de la UNP",
-    featured: true,
     problem:
       "Los estudiantes compraban y vendían entre ellos por grupos de WhatsApp dispersos, sin forma de verificar quién estaba al otro lado ni de encontrar publicaciones antiguas.",
     decision:
@@ -19,14 +18,15 @@ export const PRODUCTS: Product[] = [
     result:
       "Una base de código que un tercero podría auditar con confianza — no solo funciona, se puede confiar en que sigue funcionando.",
     image: "/images/gato-monster.png",
+    stack: ["React", "Firebase", "Firestore", "Vitest"],
+    year: 2026,
     githubUrl: "https://github.com/tu-usuario/tucampus",
   },
   {
     id: "munay-peru",
-    index: "02",
+    displayMode: "case-study",
     name: "Munay Perú",
     tagline: "Plataforma institucional y CMS propio",
-    featured: true,
     problem:
       "El equipo de la ONG dependía de mí para cualquier cambio de contenido — un texto, una imagen, un evento nuevo — porque no existía forma de administrarlo sin tocar código.",
     decision:
@@ -37,6 +37,39 @@ export const PRODUCTS: Product[] = [
     result:
       "El equipo publica sin depender de un desarrollador. Eso es lo que separa una web de un producto real.",
     image: "/images/gato-dia.png",
+    stack: ["React", "Firebase", "Firestore"],
+    year: 2026,
     demoUrl: "https://munayperu.com",
   },
 ];
+
+/**
+ * Curaduría explícita del Home. El Home nunca "lista", elige.
+ * Agregar un proyecto a PRODUCTS no lo pone en el Home:
+ * subirlo aquí es una decisión aparte, siempre manual.
+ */
+export const HOME_CASE_STUDY_IDS: string[] = ["tucampus", "munay-peru"];
+export const HOME_FEATURED_LIMIT = 4;
+
+export function getHomeCaseStudies(): Product[] {
+  return HOME_CASE_STUDY_IDS.map((id) => PRODUCTS.find((p) => p.id === id)).filter(
+    (p): p is Product => Boolean(p)
+  );
+}
+
+export function getHomeFeatured(): Product[] {
+  return PRODUCTS.filter((p) => p.displayMode === "featured").slice(0, HOME_FEATURED_LIMIT);
+}
+
+/** Para /work: el índice completo, sin límites. */
+export function getAllCaseStudies(): Product[] {
+  return PRODUCTS.filter((p) => p.displayMode === "case-study");
+}
+
+export function getAllFeatured(): Product[] {
+  return PRODUCTS.filter((p) => p.displayMode === "featured");
+}
+
+export function getProductById(id: string): Product | undefined {
+  return PRODUCTS.find((p) => p.id === id);
+}
