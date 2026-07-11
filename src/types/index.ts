@@ -1,12 +1,12 @@
-// src/types/index.ts
-export interface Project {
+export interface Product {
   id: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  stack: string[];
+  index: string;
+  name: string;
+  tagline: string;
+  problem: string;
+  decision: string;
+  result: string;
   image: string;
   demoUrl?: string;
   githubUrl?: string;
-  featured: boolean;
 }
