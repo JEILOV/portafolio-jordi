@@ -15,14 +15,12 @@ export default function ProductChapter({ product }: { product: Product }) {
       <div className="relative aspect-[16/10] w-full overflow-hidden md:aspect-[21/9]">
         <img src={product.image} alt={product.name} className="h-full w-full object-cover video-graded" />
         <div className="absolute inset-0 bg-gradient-to-t from-bg-base via-bg-base/10 to-transparent" />
-
         <div className="pointer-events-none absolute inset-4 md:inset-8" aria-hidden="true">
           <span className="absolute top-0 left-0 h-5 w-5 border-t border-l border-chassis" />
           <span className="absolute top-0 right-0 h-5 w-5 border-t border-r border-chassis" />
           <span className="absolute bottom-0 left-0 h-5 w-5 border-b border-l border-chassis" />
           <span className="absolute bottom-0 right-0 h-5 w-5 border-b border-r border-chassis" />
         </div>
-
         <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10">
           <p className="font-display text-xs uppercase tracking-widest text-phosphor">n.º {product.index} / work</p>
           <h3 className="mt-2 font-display text-3xl text-ink md:text-5xl">{product.name}</h3>
@@ -30,7 +28,7 @@ export default function ProductChapter({ product }: { product: Product }) {
         </div>
       </div>
 
-      <div className="grid gap-8 px-6 py-12 md:grid-cols-3 md:gap-12 md:px-14 md:py-16">
+      <div className="grid gap-8 px-6 pt-12 md:grid-cols-3 md:gap-12 md:px-14 md:pt-16">
         <div>
           <p className="font-display text-[11px] uppercase tracking-widest text-phosphor-cool">problema</p>
           <p className="mt-3 text-sm leading-relaxed text-ink-muted">{product.problem}</p>
@@ -56,6 +54,18 @@ export default function ProductChapter({ product }: { product: Product }) {
           </div>
         </div>
       </div>
+
+      {/* Evidencia: la parte que faltaba — el producto real, no solo la ambientación */}
+      {product.evidence && product.evidence.length > 0 && (
+        <div className="grid gap-4 px-6 py-12 md:grid-cols-2 md:gap-6 md:px-14 md:py-16">
+          {product.evidence.map((e) => (
+            <div key={e.src} className="chamfer border border-hairline bg-panel">
+              <img src={e.src} alt={e.alt} className="aspect-video w-full object-cover video-graded" />
+              <p className="px-4 py-3 font-display text-[11px] uppercase tracking-widest text-ink-muted">{e.caption}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </article>
   );
 }
