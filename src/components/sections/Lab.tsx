@@ -3,8 +3,8 @@ import Link from "next/link";
 import { getLatestLabEntries } from "@/lib/lab";
 import LabEntryCard from "@/components/lab/LabEntryCard";
 
-export default function Lab() {
-  const entries = getLatestLabEntries(3);
+export default async function Lab() {
+  const entries = await getLatestLabEntries(3);
 
   return (
     <section id="lab" className="relative border-b border-hairline">

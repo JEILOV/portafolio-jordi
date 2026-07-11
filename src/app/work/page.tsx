@@ -9,9 +9,9 @@ export const metadata: Metadata = {
   description: "Todo el trabajo: casos de estudio y proyectos destacados.",
 };
 
-export default function WorkIndexPage() {
-  const caseStudies = getAllCaseStudies();
-  const featured = getAllFeatured();
+export default async function WorkIndexPage() {
+  const caseStudies = await getAllCaseStudies();
+  const featured = await getAllFeatured();
 
   return (
     <main className="min-h-screen pb-32">

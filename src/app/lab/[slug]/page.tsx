@@ -2,10 +2,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { LAB_ENTRIES, LAB_KIND_LABELS, getLabEntryById } from "@/lib/lab";
+import { PortableText, type PortableTextComponents } from "@portabletext/react";
+import { getAllLabEntryIds, getLabEntryById, LAB_KIND_LABELS } from "@/lib/lab";
+import { urlFor } from "@/sanity/lib/image";
 
-export function generateStaticParams() {
-  return LAB_ENTRIES.map((entry) => ({ slug: entry.id }));
+export async function generateStaticParams() {
+  const ids = await getAllLabEntryIds();
+  return ids.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -14,7 +17,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const entry = getLabEntryById(slug);
+  const entry = await getLabEntryById(slug);
   if (!entry) return {};
   return {
     title: `${entry.title} — jordi.dev`,
@@ -22,13 +25,48 @@ export async function generateMetadata({
   };
 }
 
+// Componentes de render para el Portable Text: imagen intercalada y bloque de código.
+const portableTextComponents: PortableTextComponents = {
+  types: {
+    image: ({ value }) => (
+      <img
+        src={urlFor(value).width(1200).url()}
+        alt={value.alt || ""}
+        className="chamfer my-8 w-full border border-hairline object-cover"
+        loading="lazy"
+      />
+    ),
+    code: ({ value }) => (
+      <div className="chamfer my-6 overflow-x-auto border border-hairline bg-panel">
+        {value.filename && (
+          <p className="border-b border-hairline px-4 py-2 font-display text-[11px] uppercase tracking-widest text-ink-muted">
+            {value.filename}
+          </p>
+        )}
+        <pre className="px-4 py-4 text-sm leading-relaxed text-ink">
+          <code>{value.code}</code>
+        </pre>
+      </div>
+    ),
+  },
+  block: {
+    normal: ({ children }) => <p className="mb-4 leading-relaxed text-ink-muted">{children}</p>,
+    h2: ({ children }) => (
+      <h2 className="mt-10 mb-3 font-display text-xl text-ink md:text-2xl">{children}</h2>
+    ),
+    h3: ({ children }) => (
+      <h3 className="mt-8 mb-2 font-display text-lg text-ink">{children}</h3>
+    ),
+  },
+};
+
 export default async function LabEntryPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const entry = getLabEntryById(slug);
+  const entry = await getLabEntryById(slug);
   if (!entry) notFound();
 
   return (
@@ -51,9 +89,9 @@ export default async function LabEntryPage({
           {entry.summary}
         </p>
 
-        {entry.body && (
-          <div className="mt-10 max-w-2xl whitespace-pre-line text-sm leading-relaxed text-ink-muted md:text-base">
-            {entry.body}
+        {entry.body && entry.body.length > 0 && (
+          <div className="mt-10 max-w-2xl text-sm md:text-base">
+            <PortableText value={entry.body} components={portableTextComponents} />
           </div>
         )}
 

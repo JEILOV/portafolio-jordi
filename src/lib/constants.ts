@@ -1,75 +1,58 @@
 // src/lib/constants.ts
 import type { Product } from "@/types";
-
-export const PRODUCTS: Product[] = [
-  {
-    id: "tucampus",
-    displayMode: "case-study",
-    name: "TuCampus",
-    tagline: "Marketplace para la comunidad de la UNP",
-    problem:
-      "Los estudiantes compraban y vendían entre ellos por grupos de WhatsApp dispersos, sin forma de verificar quién estaba al otro lado ni de encontrar publicaciones antiguas.",
-    decision:
-      "Con cientos de publicaciones activas, cargar todo de una vez iba a matar el rendimiento en celulares de gama baja — la mayoría de los usuarios reales. Diseñé paginación por cursor sobre Firestore en vez de offset, y blindé cada transacción con autenticación estricta. Cobertura de pruebas automatizadas con Vitest para que un cambio no rompiera el flujo de compra sin que nadie lo notara.",
-    evidence: [
-      { src: "/images/gato-monster.png", alt: "Vista del listado con paginación", caption: "feed — paginación por cursor" },
-      { src: "/images/gato-dia.png", alt: "Flujo de autenticación", caption: "auth — verificación estricta" },
-    ],
-    result:
-      "Una base de código que un tercero podría auditar con confianza — no solo funciona, se puede confiar en que sigue funcionando.",
-    image: "/images/gato-monster.png",
-    stack: ["React", "Firebase", "Firestore", "Vitest"],
-    year: 2026,
-    githubUrl: "https://github.com/tu-usuario/tucampus",
-  },
-  {
-    id: "munay-peru",
-    displayMode: "case-study",
-    name: "Munay Perú",
-    tagline: "Plataforma institucional y CMS propio",
-    problem:
-      "El equipo de la ONG dependía de mí para cualquier cambio de contenido — un texto, una imagen, un evento nuevo — porque no existía forma de administrarlo sin tocar código.",
-    decision:
-      "Construí un CMS administrativo desde cero en vez de adoptar uno de terceros, con control de roles granular para que cada persona del equipo edite solo lo que le corresponde. Reglas de seguridad en Firestore auditadas línea por línea, y trabajo de SEO técnico para que el sitio institucional se indexe correctamente.",
-    evidence: [
-      { src: "/images/gato-dia.png", alt: "Panel de administración", caption: "cms — control de roles" },
-    ],
-    result:
-      "El equipo publica sin depender de un desarrollador. Eso es lo que separa una web de un producto real.",
-    image: "/images/gato-dia.png",
-    stack: ["React", "Firebase", "Firestore"],
-    year: 2026,
-    demoUrl: "https://munayperu.com",
-  },
-];
+import { client } from "@/sanity/lib/client";
+import {
+  ALL_CASE_STUDIES_QUERY,
+  ALL_FEATURED_QUERY,
+  PRODUCTS_BY_SLUGS_QUERY,
+  PRODUCT_BY_SLUG_QUERY,
+  ALL_PRODUCT_SLUGS_QUERY,
+} from "@/sanity/lib/queries";
 
 /**
  * Curaduría explícita del Home. El Home nunca "lista", elige.
- * Agregar un proyecto a PRODUCTS no lo pone en el Home:
+ * Publicar un proyecto nuevo en Sanity no lo pone en el Home:
  * subirlo aquí es una decisión aparte, siempre manual.
+ *
+ * Nota de diseño: esta lista vive en código (no en Sanity) a propósito.
+ * Es una decisión editorial de una sola persona, versionada en git junto
+ * con el resto del sitio. Si en el futuro otra persona necesitara curar
+ * el Home sin pasar por un deploy, este es el primer candidato a moverse
+ * a un documento singleton de Sanity (p. ej. "siteSettings").
  */
 export const HOME_CASE_STUDY_IDS: string[] = ["tucampus", "munay-peru"];
 export const HOME_FEATURED_LIMIT = 4;
 
-export function getHomeCaseStudies(): Product[] {
-  return HOME_CASE_STUDY_IDS.map((id) => PRODUCTS.find((p) => p.id === id)).filter(
+export async function getHomeCaseStudies(): Promise<Product[]> {
+  const products = await client.fetch<Product[]>(PRODUCTS_BY_SLUGS_QUERY, {
+    slugs: HOME_CASE_STUDY_IDS,
+  });
+  // Preserva el orden de curaduría (Sanity no garantiza el orden de `in`).
+  return HOME_CASE_STUDY_IDS.map((id) => products.find((p) => p.id === id)).filter(
     (p): p is Product => Boolean(p)
   );
 }
 
-export function getHomeFeatured(): Product[] {
-  return PRODUCTS.filter((p) => p.displayMode === "featured").slice(0, HOME_FEATURED_LIMIT);
+export async function getHomeFeatured(): Promise<Product[]> {
+  const featured = await client.fetch<Product[]>(ALL_FEATURED_QUERY);
+  return featured.slice(0, HOME_FEATURED_LIMIT);
 }
 
 /** Para /work: el índice completo, sin límites. */
-export function getAllCaseStudies(): Product[] {
-  return PRODUCTS.filter((p) => p.displayMode === "case-study");
+export async function getAllCaseStudies(): Promise<Product[]> {
+  return client.fetch<Product[]>(ALL_CASE_STUDIES_QUERY);
 }
 
-export function getAllFeatured(): Product[] {
-  return PRODUCTS.filter((p) => p.displayMode === "featured");
+export async function getAllFeatured(): Promise<Product[]> {
+  return client.fetch<Product[]>(ALL_FEATURED_QUERY);
 }
 
-export function getProductById(id: string): Product | undefined {
-  return PRODUCTS.find((p) => p.id === id);
+export async function getProductById(id: string): Promise<Product | undefined> {
+  const product = await client.fetch<Product | null>(PRODUCT_BY_SLUG_QUERY, { slug: id });
+  return product ?? undefined;
+}
+
+/** Para generateStaticParams en /work/[slug]. */
+export async function getAllProductIds(): Promise<string[]> {
+  return client.fetch<string[]>(ALL_PRODUCT_SLUGS_QUERY);
 }

@@ -46,12 +46,15 @@ export type LabEntryKind =
   | "learning"
   | "article";
 
+import type { PortableTextBlock } from "@portabletext/types";
+
 export interface LabEntry {
   id: string;
   kind: LabEntryKind;
   title: string;
   summary: string;
-  body?: string;
+  /** Portable Text: párrafos, imágenes intercaladas y bloques de código. Ausente en las vistas de lista (solo se pide en /lab/[slug]). */
+  body?: PortableTextBlock[];
   date: string; // ISO 8601, e.g. "2026-06-14"
   tags?: string[];
   link?: string;

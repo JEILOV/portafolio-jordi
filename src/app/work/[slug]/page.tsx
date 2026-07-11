@@ -2,11 +2,12 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PRODUCTS, getProductById } from "@/lib/constants";
+import { getAllProductIds, getProductById } from "@/lib/constants";
 import ProductChapter from "@/components/work/ProductChapter";
 
-export function generateStaticParams() {
-  return PRODUCTS.map((product) => ({ slug: product.id }));
+export async function generateStaticParams() {
+  const ids = await getAllProductIds();
+  return ids.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -15,7 +16,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductById(slug);
+  const product = await getProductById(slug);
   if (!product) return {};
   return {
     title: `${product.name} — jordi.dev`,
@@ -29,7 +30,7 @@ export default async function ProductDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = getProductById(slug);
+  const product = await getProductById(slug);
   if (!product) notFound();
 
   return (
