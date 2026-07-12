@@ -11,7 +11,16 @@ export default async function Work() {
 
   return (
     <section id="work" className="relative">
-      <SectionHeader eyebrow="n.º 01 / work" title="Selected Work" />
+      <SectionHeader
+  eyebrow="n.º 01 / work"
+  title="Selected Work"
+  video={{
+    webmSrc: "/videos/cookie-work.webm",
+    mp4Src: "/videos/cookie-work.mp4",
+    poster: "/images/gato-plan.png",
+    alt: "Cookie planificando frente a su escritorio",
+  }}
+/>
 
       {caseStudies.map((product, i) => (
         <ProductChapter key={product.id} product={product} index={i + 1} />
