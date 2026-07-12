@@ -40,23 +40,19 @@ export default function LazyVideo({
 
   return (
     <div ref={containerRef} className={className}>
-      {isInView ? (
-        <video
-          ref={videoRef}
-          className={`h-full w-full ${videoClassName}`}
-          poster={poster}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-label={alt}
-        >
-          <source src={webmSrc} type="video/webm" />
-          <source src={mp4Src} type="video/mp4" />
-        </video>
-      ) : (
-        <img src={poster} alt={alt} className={`h-full w-full ${videoClassName}`} />
-      )}
+      <video
+        ref={videoRef}
+        className={`h-full w-full ${videoClassName}`}
+        poster={poster}
+        muted
+        loop
+        playsInline
+        preload={isInView ? "auto" : "metadata"}
+        aria-label={alt}
+      >
+        <source src={webmSrc} type="video/webm" />
+        <source src={mp4Src} type="video/mp4" />
+      </video>
     </div>
   );
 }

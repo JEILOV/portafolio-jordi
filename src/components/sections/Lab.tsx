@@ -9,7 +9,17 @@ export default async function Lab() {
 
   return (
     <section id="lab" className="relative border-b border-hairline">
-      <SectionHeader eyebrow="n.º 02 / lab" title="Proceso" />
+       <SectionHeader
+         eyebrow="n.º 02 / lab"
+         title="Proceso"
+         video={{
+           webmSrc: "/videos/cookie-multi-pc.webm",
+           mp4Src: "/videos/cookie-multi-pc-original.mp4",
+           poster: "/images/gato-monster.png",
+           alt: "Cookie rodeado de pantallas de arquitectura, IA y visualización de datos",
+           objectPosition: "object-[center_30%]",
+         }}
+       />
 
       <div className="px-6 py-14 md:px-14 md:py-20">
         <p className="max-w-lg font-display text-2xl leading-relaxed text-ink md:text-3xl">
