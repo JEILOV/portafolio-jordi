@@ -1,15 +1,13 @@
-// src/sanity/lib/client.ts
 import { createClient } from "next-sanity";
 import { apiVersion, dataset, projectId } from "../env";
 
-/**
- * useCdn: true — leemos del CDN de Sanity (rápido, cacheado, gratis en el
- * plan Free). El contenido de un portafolio personal no cambia segundo a
- * segundo; no necesitamos bypassear el CDN salvo en el propio Studio.
- */
+if (!projectId) {
+  throw new Error("Falta NEXT_PUBLIC_SANITY_PROJECT_ID en tu .env.local");
+}
+
 export const client = createClient({
   projectId,
-  dataset,
-  apiVersion,
+  dataset: dataset || "production",
+  apiVersion: apiVersion || "2024-01-01",
   useCdn: true,
 });

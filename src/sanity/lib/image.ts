@@ -1,16 +1,16 @@
-// src/sanity/lib/image.ts
-import createImageUrlBuilder from "@sanity/image-url";
-import type { Image as SanityImageObject } from "sanity";
-import { dataset, projectId } from "../env";
+import createImageUrlBuilder from '@sanity/image-url'
 
-const builder = createImageUrlBuilder({ projectId, dataset });
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
 
-/**
- * Disponible para transformaciones de imagen del lado del cliente
- * (srcset responsivo, recortes puntuales, etc.). Las consultas GROQ en
- * queries.ts ya resuelven la URL base directamente vía `asset->url`,
- * así que la mayoría de los componentes no necesitan importar esto.
- */
-export function urlFor(source: SanityImageObject) {
-  return builder.image(source);
+if (!projectId || !dataset) {
+  throw new Error(
+    'Faltan las variables de entorno NEXT_PUBLIC_SANITY_PROJECT_ID o NEXT_PUBLIC_SANITY_DATASET'
+  )
+}
+
+const builder = createImageUrlBuilder({projectId, dataset})
+
+export function urlForImage(source: any) {
+  return builder.image(source)
 }

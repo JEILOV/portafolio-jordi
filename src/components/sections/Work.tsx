@@ -4,9 +4,9 @@ import { getHomeCaseStudies, getHomeFeatured } from "@/lib/constants";
 import ProductChapter from "@/components/work/ProductChapter";
 import FeaturedCard from "@/components/work/FeaturedCard";
 
-export default function Work() {
-  const caseStudies = getHomeCaseStudies();
-  const featured = getHomeFeatured();
+export default async function Work() {
+  const caseStudies = await getHomeCaseStudies();
+  const featured = await getHomeFeatured();
 
   return (
     <section id="work" className="relative">

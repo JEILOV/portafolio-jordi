@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { getAllLabEntryIds, getLabEntryById, LAB_KIND_LABELS } from "@/lib/lab";
-import { urlFor } from "@/sanity/lib/image";
+import { urlForImage } from "@/sanity/lib/image";
 
 export async function generateStaticParams() {
   const ids = await getAllLabEntryIds();
@@ -25,12 +25,11 @@ export async function generateMetadata({
   };
 }
 
-// Componentes de render para el Portable Text: imagen intercalada y bloque de código.
 const portableTextComponents: PortableTextComponents = {
   types: {
     image: ({ value }) => (
       <img
-        src={urlFor(value).width(1200).url()}
+        src={urlForImage(value.asset).url()}
         alt={value.alt || ""}
         className="chamfer my-8 w-full border border-hairline object-cover"
         loading="lazy"
@@ -95,16 +94,16 @@ export default async function LabEntryPage({
           </div>
         )}
 
-        {entry.link && (
-          <a
-            href={entry.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-8 inline-block font-display text-xs uppercase tracking-widest text-ink transition-colors hover:text-phosphor"
-          >
-            ver más →
-          </a>
-        )}
+      {entry.link && (
+  <a
+    href={entry.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="mt-8 inline-block font-display text-xs uppercase tracking-widest text-ink transition-colors hover:text-primary" 
+  >
+    ver más →
+  </a>
+)}
       </article>
     </main>
   );
