@@ -39,7 +39,7 @@ export default function Apertura() {
             poster="/images/gato-dia.png"
             alt="Cookie trabajando en su escritorio, el lugar donde nacen los productos"
             className="absolute inset-0 h-full w-full"
-            videoClassName="object-cover object-[68%_center] video-graded"
+            videoClassName="object-cover object-[42%_32%] md:object-[68%_center] video-graded"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-bg-base/85 via-bg-base/35 to-bg-base/5" />
           <CornerMarks />
@@ -79,7 +79,7 @@ export default function Apertura() {
             poster="/images/gato-noche.png"
             alt="Cookie en su rincón de trabajo, en calma, con la sesión de código todavía activa"
             className="absolute inset-0 h-full w-full"
-            videoClassName="object-cover object-center video-graded"
+            videoClassName="object-cover object-[38%_42%] md:object-center video-graded"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-bg-base/85 via-bg-base/35 to-bg-base/5" />
           <CornerMarks />

@@ -10,7 +10,7 @@ const CHANNELS = [
 export default function Contact() {
   return (
     <section id="contacto" className="relative min-h-screen w-full overflow-hidden">
-      <LazyVideo webmSrc="/videos/cookie-contact.webm" mp4Src="/videos/cookie-contact.mp4" poster="/images/gato-noche.png" alt="Cookie durmiéndose después de codear" className="absolute inset-0 h-full w-full" videoClassName="object-cover object-[center_25%] md:object-center video-graded scale-125 md:scale-110" />
+      <LazyVideo webmSrc="/videos/cookie-contact.webm" mp4Src="/videos/cookie-contact.mp4" poster="/images/gato-noche.png" alt="Cookie durmiéndose después de codear" className="absolute inset-0 h-full w-full" videoClassName="object-cover object-[50%_28%] md:object-center video-graded md:scale-110" />
 
       <div className="absolute inset-0 bg-gradient-to-t from-bg-base via-bg-base/40 to-bg-base/10" />
 

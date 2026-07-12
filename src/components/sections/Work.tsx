@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getHomeCaseStudies, getHomeFeatured } from "@/lib/constants";
 import ProductChapter from "@/components/work/ProductChapter";
 import FeaturedCard from "@/components/work/FeaturedCard";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 export default async function Work() {
   const caseStudies = await getHomeCaseStudies();
@@ -10,10 +11,7 @@ export default async function Work() {
 
   return (
     <section id="work" className="relative">
-      <div className="flex items-center justify-between border-b border-hairline px-6 py-6 md:px-14">
-        <p className="font-display text-xs uppercase tracking-widest text-ink-muted">n.º 01 / work</p>
-        <p className="font-display text-xs uppercase tracking-widest text-ink-muted">selected work</p>
-      </div>
+      <SectionHeader eyebrow="n.º 01 / work" title="Selected Work" />
 
       {caseStudies.map((product, i) => (
         <ProductChapter key={product.id} product={product} index={i + 1} />
